@@ -1,7 +1,8 @@
 import { ArrowRight, BookOpen, ChartNoAxesCombined, Magnet } from "lucide-react";
 import { Link } from "react-router-dom";
-import IllustrativeBHChart from "@/components/IllustrativeBHChart";
+import BHCurveChart from "@/components/BHCurveChart";
 import { Panel } from "@/components/SiteLayout";
+import { materials } from "@/data/materialData";
 
 const Home = () => (
   <main className="mx-auto max-w-7xl px-5 py-10 sm:px-8 sm:py-16">
@@ -14,8 +15,8 @@ const Home = () => (
         <div className="mt-10 flex items-center gap-3 border-t border-slate-200 pt-5"><span className="grid h-10 w-10 place-items-center rounded-xl bg-white text-cyan-700 shadow-sm"><BookOpen size={19} /></span><p className="max-w-sm text-xs leading-5 text-slate-500">Educational reference values are illustrative starting parameters, not certified experimental data.</p></div>
       </div>
       <Panel className="overflow-hidden p-4 sm:p-6">
-        <div className="mb-2 flex items-center justify-between px-1"><div><p className="text-sm font-semibold text-[#17324d]">Magnetic hysteresis</p><p className="mt-1 text-xs text-slate-500">Illustrative B–H loop · schematic only</p></div><span className="rounded-full bg-cyan-50 px-3 py-1 text-[11px] font-semibold text-cyan-800">B / H</span></div>
-        <div className="rounded-xl border border-slate-100 bg-[#fbfdff] px-1 pt-1"><IllustrativeBHChart compact /></div>
+        <div className="mb-2 flex items-center justify-between px-1"><div><p className="text-sm font-semibold text-[#17324d]">Magnetic hysteresis</p><p className="mt-1 text-xs text-slate-500">{materials[0].name} · illustrative simulated loop</p></div><span className="rounded-full bg-cyan-50 px-3 py-1 text-[11px] font-semibold text-cyan-800">B / H</span></div>
+        <div className="rounded-xl border border-slate-100 bg-[#fbfdff] px-1 pt-1"><BHCurveChart material={materials[0]} compact /></div>
       </Panel>
     </section>
     <section className="mt-14 grid gap-4 sm:grid-cols-3">

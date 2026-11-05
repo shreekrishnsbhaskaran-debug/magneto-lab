@@ -97,6 +97,27 @@ export const updateMagneticState = (state: MagneticState, nextH: number, materia
   return { ...nextState, b: calculateBFromState(nextState, material) };
 };
 
+export const advanceMagneticStateToField = (state: MagneticState, targetH: number, material: Material) => {
+  const fieldDistance = Math.abs(targetH - state.h);
+  const increment = Math.min(material.maxAppliedField / 250, Math.max(material.coercivity / 20, material.maxAppliedField / 1000));
+  const steps = Math.max(1, Math.ceil(fieldDistance / increment));
+  let nextState = state;
+  for (let step = 1; step <= steps; step += 1) {
+    const field = step === steps ? targetH : state.h + ((targetH - state.h) * step) / steps;
+    nextState = updateMagneticState(nextState, field, material);
+  }
+  return nextState;
+};
+
+export const describeMagneticState = (state: MagneticState, material: Material) => {
+  if (state.direction === 0 && state.branch === "virgin") return "Initially demagnetised";
+  if (Math.abs(state.h) >= material.maxAppliedField) return state.h > 0 ? "Positive saturation" : "Negative saturation";
+  if (state.branch === "virgin") return state.direction > 0 ? "Initial magnetisation · increasing H" : "Initial magnetisation · decreasing H";
+  if (Math.abs(state.h) < 1e-9) return state.branch === "descending" ? "Positive remanence" : "Negative remanence";
+  if (Math.abs(state.b) < material.saturationFluxDensity * 0.01) return state.branch === "descending" ? "Descending branch · near coercivity" : "Ascending branch · near coercivity";
+  return state.branch === "descending" ? "Descending hysteresis branch" : "Ascending hysteresis branch";
+};
+
 const segmentFields = (start: number, end: number, anchors: number[], stepsPerSegment: number) => {
   const knots = [start, ...anchors, end];
   const result: number[] = [];
